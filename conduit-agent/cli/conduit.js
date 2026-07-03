@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Same real agent as the web chat (conduit-agent/agent.js's runChatTurn — Claude with
+// Same real agent as the web chat (conduit-agent/agent.js's runChatTurn, Claude with
 // live tool-calling + web_search, falling back to DeepSeek if Claude is
 // unavailable), just talking to a terminal instead of a browser. No mock
 // data, no canned answers: every number comes from a live Mantle RPC call
@@ -61,7 +61,7 @@ async function main() {
     return;
   }
 
-  console.log(`${bold("Conduit")} ${dim("— the onchain research agent for Mantle")}`);
+  console.log(`${bold("Conduit")} ${dim(", the onchain research agent for Mantle")}`);
   console.log(dim("Connecting to Mantle mainnet and DefiLlama..."));
 
   const snapshot = await getSnapshot();

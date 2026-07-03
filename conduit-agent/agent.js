@@ -7,16 +7,16 @@ import { checkWalletSearchLimit, recordWalletSearch } from "../conduit-backend/r
 import { callDeepSeek, isDeepSeekConfigured } from "./deepseek.js";
 
 // Interpretation layer. Every brief below is generated at runtime by a real
-// LLM call against the live ranked signals — nothing here is a pre-written
+// LLM call against the live ranked signals, nothing here is a pre-written
 // string. Briefs run on DeepSeek (cheap, high-frequency, no tool use
-// needed — see lib/deepseek.js); the research chat further down runs on
+// needed, see lib/deepseek.js); the research chat further down runs on
 // Claude, which is the one that actually needs real tool-calling and
 // Anthropic's hosted web_search.
 //
 // Mantle AI Agent Skills: searched for a public SDK/API to wire in directly
 // (per the brief's bonus-points integration) and found no publicly
 // documented endpoint for a research-brief-writing skill as of this build
-// (2026-07-02) — only an unrelated third-party "Mantle AI" product and the
+// (2026-07-02), only an unrelated third-party "Mantle AI" product and the
 // Turing Test Hackathon's Byreal Skills CLI for trading agents, neither of
 // which fits this use case. `callAgentSkill()` below is the single,
 // isolated call site: swap its body for the real Mantle AI Agent Skills
@@ -33,7 +33,7 @@ function getClient() {
 
 // The UI applies its own typography (italics, section labels, etc.), so a
 // model that wraps its answer in *markdown emphasis* or **bold** ends up
-// showing literal asterisks on screen — and models reach for em-dashes as
+// showing literal asterisks on screen, and models reach for em-dashes as
 // a stylistic tic more than plain prose calls for. Strip both defensively
 // in case the system prompt's instruction doesn't fully land.
 export function cleanAgentText(text) {
@@ -41,14 +41,14 @@ export function cleanAgentText(text) {
     .replace(/\*\*(.+?)\*\*/g, "$1")
     .replace(/\*(.+?)\*/g, "$1")
     .replace(/`(.+?)`/g, "$1")
-    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/\s*[, ]\s*/g, ", ")
     .replace(/,\s*,/g, ",")
     .trim();
 }
 
 // Briefs run on DeepSeek by default (cheap, high-frequency). If DeepSeek is
 // down or misconfigured, fall back to Claude rather than surfacing an
-// error — a slightly more expensive call beats a broken dashboard. Only if
+// error, a slightly more expensive call beats a broken dashboard. Only if
 // both are unavailable does this actually throw.
 async function callAgentSkill({ system, prompt }) {
   try {
@@ -81,7 +81,7 @@ export async function generateEcosystemBrief({ ecosystem, composability, netFlow
 - Net capital flow across tracked protocols (7d): ${netFlow.direction === "in" ? "+" : "-"}$${(Math.abs(netFlow.value) / 1e6).toFixed(2)}M
 - Top-ranked signal this week: ${topSignal.name} (${topSignal.category}), ${(topSignal.pctChange7d * 100).toFixed(1)}% 7d TVL change, unusualness score ${topSignal.unusualness}x its typical weekly move
 
-Write a 2-3 sentence "Agent Brief" interpreting what's actually happening — the story behind these numbers, not a restatement of them.`;
+Write a 2-3 sentence "Agent Brief" interpreting what's actually happening, the story behind these numbers, not a restatement of them.`;
 
   return callAgentSkill({ system: ANALYST_SYSTEM_PROMPT, prompt });
 }
@@ -125,14 +125,14 @@ WHAT_TO_WATCH: <one sentence, a concrete, falsifiable thing to check next week>`
   };
 }
 
-// Claude-specific — gates the research chat (/api/chat), which is the
+// Claude-specific, gates the research chat (/api/chat), which is the
 // piece that actually needs tool-calling + web_search. Brief generation
 // runs on DeepSeek; see isDeepSeekConfigured in lib/deepseek.js for that.
 export function isClaudeConfigured() {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
-// Deterministic label for a chat turn — matched against the real tracked
+// Deterministic label for a chat turn, matched against the real tracked
 // protocol registry rather than asked of the LLM, so it can't drift from
 // what the answer is actually grounded in and doesn't depend on the model
 // following a formatting instruction.
@@ -151,7 +151,7 @@ export function pickResearchLabel(question, protocols) {
 }
 
 // Formats the full live dataset into the system prompt so chat answers are
-// grounded in the same numbers the dashboard shows — not a fresh LLM guess.
+// grounded in the same numbers the dashboard shows, not a fresh LLM guess.
 export function buildResearchContext({ ecosystem, protocols, signals, composability, netFlow }) {
   const protocolLines = protocols
     .map((protocol) => {
@@ -173,7 +173,7 @@ Ecosystem:
 - Composability across tracked protocols: ${composability.activePct}% active / ${composability.idlePct}% idle
 - Net capital flow (7d, tracked protocols): ${netFlow.direction === "in" ? "+" : "-"}$${(Math.abs(netFlow.value) / 1e6).toFixed(2)}M
 
-Tracked protocols — this is the ONLY set of Mantle protocols you have real data for:
+Tracked protocols, this is the ONLY set of Mantle protocols you have real data for:
 ${protocolLines}
 
 Signal ranking (by magnitude × unusualness, highest first):
@@ -181,24 +181,24 @@ ${signalLines}`;
 }
 
 export function buildChatSystemPrompt(context, { searchAllowed = true } = {}) {
-  return `You are the Conduit research agent for Mantle, talking directly with a researcher in a chat interface. This is a real research tool, not a demo — do actual work before answering.
+  return `You are the Conduit research agent for Mantle, talking directly with a researcher in a chat interface. This is a real research tool, not a demo, do actual work before answering.
 
 The block below is a snapshot of live data as of the start of this conversation; it may be a few minutes stale. You also have tools:
 - get_ecosystem_snapshot: pull the freshest ecosystem numbers if you need them re-confirmed.
 - get_protocol_detail: real live detail for ANY Mantle protocol by DefiLlama slug, not just the 6 below.
-- search_mantle_protocols: real search across every protocol DefiLlama tracks on Mantle, when asked about one not in the list below. Note its TVL may include multichain activity, not Mantle-only — say so if you cite it.
+- search_mantle_protocols: real search across every protocol DefiLlama tracks on Mantle, when asked about one not in the list below. Note its TVL may include multichain activity, not Mantle-only, say so if you cite it.
 - get_mantle_chain_status: live RPC heartbeat (block number, gas price) if asked how current the data is.
 ${
   searchAllowed
-    ? `- web_search: expensive, last-resort only. Use it ONLY if the answer is impossible without it and none of your other tools can help (e.g. a genuinely unfamiliar term with no onchain data angle at all). Never use it for anything about Mantle TVL/protocols, and never use it just to "double check" or add color — answer from your own tools and knowledge first.`
-    : `- web_search: NOT available for this message — this wallet has used today's web search allowance. Do not mention this limitation to the user or apologize for it; just answer using your other tools and your own knowledge, same as always.`
+    ? `- web_search: expensive, last-resort only. Use it ONLY if the answer is impossible without it and none of your other tools can help (e.g. a genuinely unfamiliar term with no onchain data angle at all). Never use it for anything about Mantle TVL/protocols, and never use it just to "double check" or add color, answer from your own tools and knowledge first.`
+    : `- web_search: NOT available for this message, this wallet has used today's web search allowance. Do not mention this limitation to the user or apologize for it; just answer using your other tools and your own knowledge, same as always.`
 }
 
 Rules:
 - Never invent numbers, protocols, or events. If you don't have real data for something, use a tool to get it, or say plainly it's outside what Conduit currently tracks.
 - Default to answering directly from the live data block and your own knowledge. Only reach for a tool when you genuinely lack the specific number or fact being asked for.
-- Prefer your own data tools over web_search for anything about Mantle TVL/protocols — they're the source of truth, not a website's summary of it. web_search is a last resort, not a first instinct.
-- When you use web_search or a tool that returns a URL, that source is tracked automatically and appended as a "Sources" list after your answer — you don't need to format citations yourself, just write naturally and use the tools when they'd genuinely improve the answer.
+- Prefer your own data tools over web_search for anything about Mantle TVL/protocols, they're the source of truth, not a website's summary of it. web_search is a last resort, not a first instinct.
+- When you use web_search or a tool that returns a URL, that source is tracked automatically and appended as a "Sources" list after your answer, you don't need to format citations yourself, just write naturally and use the tools when they'd genuinely improve the answer.
 - Write like a sharp analyst: direct, specific, no filler, no "as an AI" disclaimers. Keep answers to 2-5 sentences unless the question genuinely needs more.
 - No markdown (no asterisks, no bold, no backticks) and no em-dashes or en-dashes as punctuation; use periods and commas instead. Plain prose only.
 
@@ -215,7 +215,7 @@ export function buildFallbackChatSystemPrompt(context) {
 ${buildResearchContext(context)}`;
 }
 
-// Hard cap, not just a prompt suggestion — bounds real per-turn cost
+// Hard cap, not just a prompt suggestion, bounds real per-turn cost
 // regardless of how the model interprets "use sparingly" wording.
 const WEB_SEARCH_TOOL = { type: "web_search_20250305", name: "web_search", max_uses: 1 };
 
@@ -230,7 +230,7 @@ export const CHAT_TOOLS = [
   {
     name: "get_protocol_detail",
     description:
-      "Fetch real live TVL detail for one specific Mantle protocol by its DefiLlama slug — works for any Mantle protocol, not just the 6 curated ones. Returns current/7d-ago/30d-ago TVL and a DefiLlama source URL. Use search_mantle_protocols first if you don't know the exact slug.",
+      "Fetch real live TVL detail for one specific Mantle protocol by its DefiLlama slug, works for any Mantle protocol, not just the 6 curated ones. Returns current/7d-ago/30d-ago TVL and a DefiLlama source URL. Use search_mantle_protocols first if you don't know the exact slug.",
     input_schema: {
       type: "object",
       properties: {
@@ -258,11 +258,11 @@ export const CHAT_TOOLS = [
   },
 ];
 
-// Executes one CLIENT tool call for real — every branch hits a live RPC or
+// Executes one CLIENT tool call for real, every branch hits a live RPC or
 // DefiLlama call, nothing here is a lookup table. Server tools (web_search)
 // are resolved by Anthropic directly and never reach this function. Errors
 // (including a real-world case: some multichain protocols' full DefiLlama
-// payload is 20-30MB+ and can take upwards of a minute — see
+// payload is 20-30MB+ and can take upwards of a minute, see
 // getProtocolMantleHistory) are caught and returned as an honest
 // tool_result the model can relay, rather than throwing and killing the
 // whole chat turn over one slow lookup.
@@ -312,7 +312,7 @@ async function runToolUnsafe(name, input) {
   }
 }
 
-// Real streaming call with tools — returns the Anthropic SDK's MessageStream
+// Real streaming call with tools, returns the Anthropic SDK's MessageStream
 // so the caller can pipe `text` events straight to its own output (an HTTP
 // stream, a terminal, anything), and inspect tool_use/server_tool_use
 // blocks for the agentic loop.
@@ -364,15 +364,15 @@ function collectSourcesFromToolResult(result, sources) {
 // risk of splitting a multi-char pattern across chunk boundaries the way
 // markdown stripping would be).
 function stripDashesFromChunk(delta) {
-  return delta.replace(/—|–/g, ",");
+  return delta.replace(/, |, /g, ",");
 }
 
-// The shared chat engine — one real agentic turn (tool-use loop, Claude
+// The shared chat engine, one real agentic turn (tool-use loop, Claude
 // primary / DeepSeek fallback), used by both /api/chat (HTTP streaming) and
 // the CLI (terminal stdout). `onChunk` receives every piece of output text
 // exactly once, in order: tool/search status lines, the answer itself, and
 // a trailing Sources list, so callers can just pipe it to whatever output
-// they have — a Response stream, process.stdout, anything.
+// they have, a Response stream, process.stdout, anything.
 export async function runChatTurn({ conversation, context, onChunk, streamRef, wallet }) {
   const searchAllowed = wallet ? checkWalletSearchLimit(wallet).allowed : true;
   const tools = searchAllowed ? CHAT_TOOLS : CHAT_TOOLS.filter((t) => t.name !== "web_search");
@@ -463,7 +463,7 @@ export async function runChatTurn({ conversation, context, onChunk, streamRef, w
         await runDeepSeekFallback();
         return;
       } catch {
-        // both providers failed this turn — fall through to the note below
+        // both providers failed this turn, fall through to the note below
       }
     }
     emit(

@@ -6,11 +6,11 @@
 // lib/signals.js: Dexs/Lending/Derivatives/Yield Aggregator count as capital
 // actively deployed to trade or earn; RWA/Liquid Staking/Bridge count as
 // held/passive exposure. This is a disclosed, real methodology built on
-// DefiLlama's own category taxonomy — not a fabricated number.
+// DefiLlama's own category taxonomy, not a fabricated number.
 //
 // `logo` is a verified-working default (curl-checked against DefiLlama's
-// icon CDN) used only if the live /protocol/{slug} fetch — which returns
-// the same field — fails; see lib/snapshot.js's fallback path. The glyph +
+// icon CDN) used only if the live /protocol/{slug} fetch, which returns
+// the same field, fails; see lib/snapshot.js's fallback path. The glyph +
 // accent stay as a colored-initial fallback for the <img> to degrade to
 // if even the logo URL is unreachable (offline dev, CDN down).
 

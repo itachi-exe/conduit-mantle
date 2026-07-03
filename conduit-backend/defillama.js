@@ -23,7 +23,7 @@ export async function getChainTvlHistory() {
 // that and gives an honest Mantle-only series.
 export async function getProtocolMantleHistory(slug, { timeoutMs = 8000 } = {}) {
   // DefiLlama's /protocol/{slug} returns the FULL multichain payload (every
-  // chain's history) even though we only want the Mantle slice — for a
+  // chain's history) even though we only want the Mantle slice, for a
   // large multichain protocol (e.g. Aave V3: ~28MB, 21 chains) that can
   // take upwards of a minute. `timeoutMs` lets callers that expect to hit
   // arbitrary/unknown-size protocols allow more time than the tracked,
@@ -58,7 +58,7 @@ export function daysAgo(n) {
   return Math.floor(Date.now() / 1000) - n * DAY;
 }
 
-// Real search across EVERY protocol DefiLlama tracks on Mantle — not just
+// Real search across EVERY protocol DefiLlama tracks on Mantle, not just
 // the 6 curated near-native ones in lib/protocols.js. Used by the chat
 // agent's search_mantle_protocols tool so it can genuinely look something
 // up instead of being limited to a fixed context dump. The full /protocols
@@ -83,7 +83,7 @@ export async function searchMantleProtocols(query) {
     .slice(0, 5);
 }
 
-// Real, on-demand detail for a single protocol by slug — works for ANY
+// Real, on-demand detail for a single protocol by slug, works for ANY
 // Mantle protocol (found via searchMantleProtocols), not just the tracked
 // 6. Fetches fresh from DefiLlama rather than the cached snapshot.
 export async function getProtocolDetail(slug) {

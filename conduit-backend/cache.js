@@ -1,5 +1,5 @@
 // Tiny in-memory TTL cache. Good enough for a single long-lived `next dev`
-// / `next start` node process — keeps the dashboard snappy on repeat loads
+// / `next start` node process, keeps the dashboard snappy on repeat loads
 // without hammering DefiLlama/RPC on every request. Not shared across
 // serverless instances; that's an acceptable tradeoff for this deliverable.
 

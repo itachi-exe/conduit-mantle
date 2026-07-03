@@ -2,7 +2,7 @@
 
 ### The Onchain Research Agent for Mantle
 
-**Whitepaper — v1.0**
+**Whitepaper, v1.0**
 
 ---
 
@@ -27,7 +27,7 @@ Onchain data is public. Onchain understanding is not.
 
 Reading the actual state of a chain like Mantle today means manually
 stitching together explorers, protocol dashboards, and ad hoc queries, then
-forming a judgment by hand. The friction is not access — it is synthesis. A
+forming a judgment by hand. The friction is not access, it is synthesis. A
 researcher can see that a protocol's TVL moved, but not whether that move is
 routine noise or the most significant thing that happened on the chain that
 week. This gap is where time is lost, and where most participants who are not
@@ -35,7 +35,7 @@ full-time analysts simply stop looking.
 
 Conduit closes that gap by doing what a human researcher does, at machine
 speed: it watches the ecosystem, detects what changed, ranks it by
-significance, and explains it in plain language — with the option to ask it
+significance, and explains it in plain language, with the option to ask it
 anything further and have it go look.
 
 ---
@@ -64,7 +64,7 @@ Conduit is organized into four layers.
 ### 3.1 Data Layer
 
 A Next.js API layer reads Mantle mainnet (chain ID 5000) directly over its
-public RPC endpoint via `viem` — block height, block timestamp, and gas
+public RPC endpoint via `viem`, block height, block timestamp, and gas
 price, refreshed on every snapshot. In parallel, it pulls chain-wide and
 per-protocol historical TVL from DefiLlama, reading each tracked protocol's
 `chainTvls.Mantle` slice specifically rather than its global multichain
@@ -77,14 +77,14 @@ fetch fails.
 ### 3.2 Signal Layer
 
 A pure function takes the current and prior snapshot and produces a ranked
-list of what changed and how much it matters — detailed in Section 4.
+list of what changed and how much it matters, detailed in Section 4.
 
 ### 3.3 Agent Layer
 
 Two LLM providers are used deliberately, for different jobs:
 
 - **DeepSeek** generates the high-frequency, low-stakes dashboard briefs
-  (ecosystem summary, top signal, per-asset writeups) — cheap enough to
+  (ecosystem summary, top signal, per-asset writeups), cheap enough to
   regenerate often.
 - **Claude** powers the conversational research agent, where tool-calling
   and live web search justify the higher cost per turn.
@@ -106,7 +106,7 @@ package. See Section 7.
 
 ### 4.1 Signal Ranking
 
-Raw percentage change is a poor significance measure on its own — a large,
+Raw percentage change is a poor significance measure on its own, a large,
 stable protocol drifting 1% is noise, while a small, usually-quiet protocol
 moving three times its typical weekly swing is a real signal. Conduit scores
 each tracked protocol as:
@@ -128,7 +128,7 @@ Tracked protocols are split into capital that is actively deployed to trade
 or earn (Dexs, Lending) versus capital that is held or passively exposed
 (RWA), using DefiLlama's own category taxonomy rather than an invented
 metric. This produces an active-versus-idle ratio for the ecosystem as a
-whole — a disclosed, reproducible methodology, not an editorialized score.
+whole, a disclosed, reproducible methodology, not an editorialized score.
 
 ---
 
@@ -145,18 +145,18 @@ rendered with a typewriter reveal rather than appearing all at once.
 The chat surface runs a genuine agentic tool-use loop, not a single
 context-stuffed completion. On each turn, Claude may call:
 
-- **`web_search`** — Anthropic's hosted search tool, for anything outside
+- **`web_search`**, Anthropic's hosted search tool, for anything outside
   Conduit's own data.
-- **`get_ecosystem_snapshot`** — re-pulls live snapshot or RPC heartbeat data
+- **`get_ecosystem_snapshot`**, re-pulls live snapshot or RPC heartbeat data
   on demand, for the freshest possible read.
-- **`search_mantle_protocols`** — searches every protocol DefiLlama tracks on
+- **`search_mantle_protocols`**, searches every protocol DefiLlama tracks on
   Mantle, not only the curated set, so the agent can answer about a protocol
   it was not pre-loaded with.
-- **`get_protocol_detail`** — fetches live TVL detail for any single Mantle
+- **`get_protocol_detail`**, fetches live TVL detail for any single Mantle
   protocol by slug, with its DefiLlama source link.
 
 Each tool call is streamed to the client as a visible status line before its
-result returns — the research process is observable, not a black box. Every
+result returns, the research process is observable, not a black box. Every
 URL the turn touches (search results, DefiLlama links) is collected and
 rendered as a clickable source list at the end of the reply, and each reply
 is tagged with a topic label determined deterministically from the real
@@ -178,7 +178,7 @@ reachable, the agent says so directly rather than guessing.
 
 The conversational agent requires a connected wallet before it will respond.
 Any injected, EIP-1193-compatible wallet (MetaMask, Rabby, OKX, and similar)
-is supported directly — there is no WalletConnect step and no signature
+is supported directly, there is no WalletConnect step and no signature
 requested. Connecting supplies only an address, used as an identifier for
 rate-limiting; it is not a proof-of-ownership or authentication mechanism,
 and should not be treated as one for anything beyond metering a free
@@ -197,14 +197,14 @@ reaching the model.
 
 Conduit is not confined to a browser tab.
 
-- **Web dashboard** — the primary surface: live ecosystem snapshot, ranked
+- **Web dashboard**, the primary surface: live ecosystem snapshot, ranked
   signal, per-asset drilldown, and the conversational agent.
-- **Terminal CLI** (`npx conduit-mantle`) — the identical agent and tool-use
+- **Terminal CLI** (`npx conduit-mantle`), the identical agent and tool-use
   logic, running as a terminal REPL against a fresh live snapshot on launch.
-- **LLM skill package** — a dependency-free Node script (no `npm install`, no
+- **LLM skill package**, a dependency-free Node script (no `npm install`, no
   API key; raw `eth_*` JSON-RPC over `fetch` in place of a client library)
-  that ports the read-only half of the pipeline — chain heartbeat, TVL
-  snapshot, signal ranking, composability, protocol search and detail — into
+  that ports the read-only half of the pipeline, chain heartbeat, TVL
+  snapshot, signal ranking, composability, protocol search and detail, into
   a form any LLM or agent runtime that can execute a script can call
   directly, mid-conversation, without going through Conduit's own servers.
 
@@ -227,8 +227,8 @@ analytics (accumulation/rotation/exit patterns), a narrative-versus-reality
 sentiment overlay, treasury-activity correlation tracking, and drilldowns
 into specific named tokenized real-world assets beyond what DefiLlama's own
 categorization already surfaces. These are natural extensions of the same
-architecture — the data layer, signal layer, and agent layer already
-generalize to them — but they are future work, not present functionality.
+architecture, the data layer, signal layer, and agent layer already
+generalize to them, but they are future work, not present functionality.
 
 ---
 

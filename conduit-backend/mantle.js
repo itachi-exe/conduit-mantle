@@ -8,7 +8,7 @@ const client = createPublicClient({
   transport: http(RPC_URL),
 });
 
-// Real, live Mantle mainnet heartbeat — proves this isn't a static page.
+// Real, live Mantle mainnet heartbeat, proves this isn't a static page.
 export async function getChainHeartbeat() {
   const [blockNumber, block, gasPrice] = await Promise.all([
     client.getBlockNumber(),

@@ -1,11 +1,10 @@
-// In-memory per-wallet daily chat message counter. Single-process only —
-// same documented tradeoff as lib/cache.js: fine for a `next dev`/`next
+// In-memory per-wallet daily chat message counter. Single-process only, // same documented tradeoff as lib/cache.js: fine for a `next dev`/`next
 // start` demo, not shared across serverless instances or restarts.
 
 const DAILY_LIMIT = 10;
 const store = new Map();
 
-// Separate, smaller daily allowance for web_search specifically — the
+// Separate, smaller daily allowance for web_search specifically, the
 // expensive tool. Most of the 10 daily messages never need it; this caps
 // how many of them are allowed to, independent of the message count.
 const DAILY_SEARCH_LIMIT = 2;
@@ -34,7 +33,7 @@ export function checkWalletSearchLimit(wallet) {
   return { allowed: count < DAILY_SEARCH_LIMIT, remaining: Math.max(DAILY_SEARCH_LIMIT - count, 0) };
 }
 
-// Call only when the model actually performed a web_search this turn — not
+// Call only when the model actually performed a web_search this turn, not
 // merely when it was allowed to. A message that never needed search must
 // not touch this counter.
 export function recordWalletSearch(wallet) {

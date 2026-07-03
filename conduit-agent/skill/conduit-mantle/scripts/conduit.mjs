@@ -2,7 +2,7 @@
 
 // Dependency-free (Node 18+, uses only built-in fetch) Mantle data tools.
 // Same real Mantle RPC + DefiLlama pipeline as the Conduit dashboard and
-// its chat agent's tool-use — ported here with zero npm install so any
+// its chat agent's tool-use, ported here with zero npm install so any
 // LLM/agent with a bash or code-execution tool can run it directly.
 // Every call hits a live endpoint at run time; nothing is cached or canned.
 
@@ -21,7 +21,7 @@ const TRACKED_PROTOCOLS = [
 
 // A handful of concurrent connections to the same host occasionally hit a
 // transient connect timeout (sandboxed/rate-limited networks especially) even
-// though each request works fine on its own — one retry after a short delay
+// though each request works fine on its own, one retry after a short delay
 // clears that without masking a genuinely dead endpoint.
 async function withRetry(fn, retries = 2) {
   for (let attempt = 0; ; attempt++) {
@@ -121,7 +121,7 @@ function stdev(values) {
 }
 
 // Ranks protocols by how much their 7d TVL move stands out against their
-// OWN recent volatility, not raw dollar size — a big protocol drifting +1%
+// OWN recent volatility, not raw dollar size, a big protocol drifting +1%
 // isn't a signal, a small one moving 3x its usual weekly swing is.
 function rankSignals(protocols) {
   return protocols
@@ -239,7 +239,7 @@ async function protocolDetail(slug) {
   };
 }
 
-const [, , cmd, ...args] = process.argv;
+const [, cmd, ...args] = process.argv;
 
 async function main() {
   switch (cmd) {

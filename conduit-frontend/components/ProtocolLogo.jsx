@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // Real protocol logos from DefiLlama's icon CDN (the same source we pull
 // live TVL data from). Falls back to a colored-initial glyph if the image
-// 404s or the CDN is unreachable — never a broken-image icon.
+// 404s or the CDN is unreachable, never a broken-image icon.
 export default function ProtocolLogo({ src, name, glyph, accent, size = 32 }) {
   const [failed, setFailed] = useState(false);
 

@@ -21,13 +21,13 @@ export function formatPct(value, { signed = false, digits = 1 } = {}) {
 const SHORT_DATE = { month: "short", day: "numeric" };
 const SHORT_TIME = { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" };
 
-// "Jul 2" — no ISO dashes. Used for chart axis ticks/tooltips.
+// "Jul 2", no ISO dashes. Used for chart axis ticks/tooltips.
 export function formatShortDate(unixSecondsOrDate) {
   const d = unixSecondsOrDate instanceof Date ? unixSecondsOrDate : new Date(unixSecondsOrDate * 1000);
   return d.toLocaleDateString("en-US", SHORT_DATE);
 }
 
-// "Jul 2 · 08:12 UTC" — no ISO dashes. Used for Agent Brief timestamps.
+// "Jul 2 · 08:12 UTC", no ISO dashes. Used for Agent Brief timestamps.
 export function formatTimestamp(ms) {
   if (!ms) return null;
   const d = new Date(ms);

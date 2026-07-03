@@ -11,7 +11,7 @@ export default function CopyCommand({ command }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      // Clipboard API can be blocked (permissions, insecure context) — the
+      // Clipboard API can be blocked (permissions, insecure context), the
       // command is still plainly visible and selectable either way.
     }
   }
