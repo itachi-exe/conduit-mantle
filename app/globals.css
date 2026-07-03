@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  --font-delius: "Delius", sans-serif;
+
+  --color-ink: #0a0a0b;
+  --color-ink-raised: #101012;
+  --color-panel: #131315;
+  --color-hairline: rgba(245, 245, 240, 0.1);
+  --color-hairline-strong: rgba(245, 245, 240, 0.18);
+  --color-paper: #f5f5f0;
+  --color-paper-dim: rgba(245, 245, 240, 0.62);
+  --color-paper-faint: rgba(245, 245, 240, 0.4);
+  --color-signal: #00997a;
+  --color-signal-dim: rgba(0, 153, 122, 0.14);
+  --color-danger: #ff6b57;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-hairline);
+  }
+
+  html {
+    background-color: var(--color-ink);
+    color-scheme: dark;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(245, 245, 240, 0.06);
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 245, 240, 0.08),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

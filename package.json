@@ -1,0 +1,34 @@
+{
+  "name": "conduit-mantle",
+  "version": "0.1.0",
+  "description": "Conduit: the onchain research agent for Mantle. Real Mantle RPC + DefiLlama data, ranked signals, and a real LLM (Claude with live tool-calling/web search, falling back to DeepSeek) writing the interpretation. Web dashboard + `conduit` terminal agent.",
+  "license": "MIT",
+  "keywords": ["mantle", "defi", "onchain", "research", "agent", "cli", "claude", "deepseek", "llm"],
+  "type": "module",
+  "bin": {
+    "conduit": "./conduit-agent/cli/conduit.js"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "oxlint",
+    "cli": "node conduit-agent/cli/conduit.js",
+    "skill:zip": "cd conduit-agent/skill && rm -f ../../public/downloads/conduit-mantle-skill.zip && zip -r ../../public/downloads/conduit-mantle-skill.zip conduit-mantle -x '*.DS_Store'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.109.1",
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.9.1",
+    "viem": "^2.54.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "oxlint": "^1.71.0",
+    "tailwindcss": "^4.3.2"
+  }
+}
