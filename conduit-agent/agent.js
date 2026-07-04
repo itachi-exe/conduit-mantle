@@ -41,7 +41,7 @@ export function cleanAgentText(text) {
     .replace(/\*\*(.+?)\*\*/g, "$1")
     .replace(/\*(.+?)\*/g, "$1")
     .replace(/`(.+?)`/g, "$1")
-    .replace(/\s*[, ]\s*/g, ", ")
+    .replace(/\s*[—–]\s*/g, ", ")
     .replace(/,\s*,/g, ",")
     .trim();
 }
@@ -364,7 +364,7 @@ function collectSourcesFromToolResult(result, sources) {
 // risk of splitting a multi-char pattern across chunk boundaries the way
 // markdown stripping would be).
 function stripDashesFromChunk(delta) {
-  return delta.replace(/, |, /g, ",");
+  return delta.replace(/—|–/g, ",");
 }
 
 // The shared chat engine, one real agentic turn (tool-use loop, Claude

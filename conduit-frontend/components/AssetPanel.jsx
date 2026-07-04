@@ -76,7 +76,6 @@ export default function AssetPanel({ protocols, selectedId, onSelect, onBack, br
           <AgentBrief
             label={`${protocol.name} · Agent Brief`}
             badge="Generated live"
-            caption="Engine: DeepSeek (deepseek-v4-flash), called at runtime with this protocol's live ranked signal. Architected for Mantle AI Agent Skills. No public SDK for this was available as of build time; see README."
             loading={brief.status === "loading"}
             error={brief.status === "error" ? brief.error : null}
             sections={
