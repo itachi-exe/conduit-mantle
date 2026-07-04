@@ -321,7 +321,7 @@ export default function ResearchChat({ onBack, suggestedPrompts }) {
         {wallet && messages.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
             <p className="max-w-sm text-[14px] text-paper-faint">
-              Ask about any of the 6 tracked Mantle protocols, another Mantle protocol entirely, the composability
+              Ask about any of the 11 tracked Mantle protocols, another Mantle protocol entirely, the composability
               ratio, or this week's ranked signal. The agent will fetch and cite what it needs.
             </p>
             <div className="flex flex-wrap justify-center gap-2">

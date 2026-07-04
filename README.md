@@ -34,10 +34,12 @@ Four layers, in `conduit-frontend/`, `conduit-backend/`, `conduit-agent/` + `app
    schema, cached 60s in-memory (`conduit-backend/cache.js`) so repeat loads are fast
    without hammering the upstream APIs on every request.
 
-   Tracked protocols are six real, near-native (≤2 chain) Mantle protocols
+   Tracked protocols are eleven real, near-native (≤2 chain) Mantle protocols
    verified against the DefiLlama API before being hardcoded into the
-   registry: Merchant Moe, Agni Finance, Fluxion Network (Dexs), INIT
-   Capital, Lendle (Lending), and Mantle Index Four Fund (RWA).
+   registry: Merchant Moe, Agni Finance, Fluxion Network, FusionX V3 (Dexs),
+   INIT Capital, Lendle (Lending), Mantle Index Four Fund, Solv RWA (RWA),
+   Circuit Protocol (Yield Aggregator), Aurelius (CDP), and Puff Penthouse
+   (Farm).
 
 2. **Signal layer** (`conduit-backend/signals.js`), for each protocol, computes the 7d
    TVL delta and scores it by `magnitude × unusualness`, where unusualness
@@ -99,7 +101,7 @@ tool-use loop (`app/api/chat/route.js`, capped at 4 rounds):
   live dashboard data or RPC heartbeat on demand, for when the model wants
   the freshest read rather than what's in the system prompt.
 - **search_mantle_protocols**, real search across *every* protocol
-  DefiLlama tracks on Mantle, not just the 6 curated ones, so the agent can
+  DefiLlama tracks on Mantle, not just the 11 curated ones, so the agent can
   answer about a protocol it wasn't pre-loaded with.
 - **get_protocol_detail**, real live TVL detail for any Mantle protocol by
   slug, with its DefiLlama source URL. Bounded to a 15s timeout: some

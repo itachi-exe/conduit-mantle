@@ -3,10 +3,22 @@ import { cached } from "./cache.js";
 const BASE = "https://api.llama.fi";
 const DAY = 86400;
 
+// One retry on a transient network-level failure (connection reset, DNS
+// blip), not on a real HTTP error status, since a 404/500 will just fail
+// again identically. Cheap insurance against exactly the kind of one-off
+// flakiness that shouldn't take down an otherwise-successful snapshot.
 async function getJson(url, timeoutMs = 8000) {
-  const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
-  if (!res.ok) throw new Error(`DefiLlama ${res.status} on ${url}`);
-  return res.json();
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+    if (!res.ok) throw new Error(`DefiLlama ${res.status} on ${url}`);
+    return res.json();
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith("DefiLlama ")) throw err;
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+    if (!res.ok) throw new Error(`DefiLlama ${res.status} on ${url}`);
+    return res.json();
+  }
 }
 
 // Real chain-level TVL history for Mantle. Used for the ecosystem-wide
@@ -59,7 +71,7 @@ export function daysAgo(n) {
 }
 
 // Real search across EVERY protocol DefiLlama tracks on Mantle, not just
-// the 6 curated near-native ones in lib/protocols.js. Used by the chat
+// the 11 curated near-native ones in lib/protocols.js. Used by the chat
 // agent's search_mantle_protocols tool so it can genuinely look something
 // up instead of being limited to a fixed context dump. The full /protocols
 // list is ~1-2MB, so it's cached for 10 minutes rather than re-fetched
@@ -85,7 +97,7 @@ export async function searchMantleProtocols(query) {
 
 // Real, on-demand detail for a single protocol by slug, works for ANY
 // Mantle protocol (found via searchMantleProtocols), not just the tracked
-// 6. Fetches fresh from DefiLlama rather than the cached snapshot.
+// 11. Fetches fresh from DefiLlama rather than the cached snapshot.
 export async function getProtocolDetail(slug) {
   // 15s: generous for the tracked protocols (all ~1-5s in practice) without
   // letting a huge multichain protocol's payload hang the chat turn for a

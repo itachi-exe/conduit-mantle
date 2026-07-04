@@ -215,10 +215,11 @@ reduced or divergent implementation of another.
 
 ## 8. Current Scope
 
-Conduit today tracks six near-native Mantle protocols in depth (Merchant
-Moe, Agni Finance, Fluxion Network, INIT Capital, Lendle, and Mantle Index
-Four Fund) with full historical TVL and signal ranking, plus on-demand search
-and detail lookup across every other protocol DefiLlama tracks on Mantle.
+Conduit today tracks eleven near-native Mantle protocols in depth (Merchant
+Moe, Agni Finance, Fluxion Network, INIT Capital, Lendle, Mantle Index Four
+Fund, FusionX V3, Solv RWA, Circuit Protocol, Aurelius, and Puff Penthouse)
+with full historical TVL and signal ranking, plus on-demand search and
+detail lookup across every other protocol DefiLlama tracks on Mantle.
 The composability methodology classifies capital as active or passive at the
 category level.
 

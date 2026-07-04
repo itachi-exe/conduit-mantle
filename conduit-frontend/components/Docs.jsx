@@ -203,9 +203,10 @@ unusualness  = |7-day % change| ÷ (that protocol's own trailing daily
 
       <Section num="08" eyebrow="Scope" title="What's shipped, what isn't.">
         <p>
-          Conduit today tracks six near-native Mantle protocols in depth (Merchant Moe, Agni Finance, Fluxion
-          Network, INIT Capital, Lendle, and Mantle Index Four Fund) with full historical TVL and signal ranking,
-          plus on-demand search and detail lookup across every other protocol DefiLlama tracks on Mantle.
+          Conduit today tracks eleven near-native Mantle protocols in depth (Merchant Moe, Agni Finance, Fluxion
+          Network, INIT Capital, Lendle, Mantle Index Four Fund, FusionX V3, Solv RWA, Circuit Protocol, Aurelius,
+          and Puff Penthouse) with full historical TVL and signal ranking, plus on-demand search and detail lookup
+          across every other protocol DefiLlama tracks on Mantle.
         </p>
         <p>
           Not yet built, and not claimed as built: per-wallet behavioral analytics, a narrative-versus-reality

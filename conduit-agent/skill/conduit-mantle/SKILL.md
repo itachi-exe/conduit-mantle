@@ -27,7 +27,7 @@ Reach for this skill whenever the user asks about:
 Run these with your bash / code-execution tool from this skill's directory:
 
 - `node scripts/conduit.mjs snapshot`, full ecosystem snapshot: chain TVL
-  and 7d delta, all 6 tracked protocols with current/7d-ago TVL, ranked
+  and 7d delta, all 11 tracked protocols with current/7d-ago TVL, ranked
   signals (biggest moves relative to each protocol's own volatility),
   composability split (active vs. passive capital), 7d net flow, and a live
   chain heartbeat.

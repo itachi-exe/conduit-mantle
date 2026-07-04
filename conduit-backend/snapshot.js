@@ -8,16 +8,36 @@ const SNAPSHOT_TTL_MS = 60_000;
 const CACHE_KEY = "snapshot";
 
 async function buildLiveSnapshot() {
-  const [chainTvlHistory, heartbeat, protocolHistories] = await Promise.all([
+  const [chainTvlHistory, heartbeat, protocolResults] = await Promise.all([
     getChainTvlHistory(),
     getChainHeartbeat(),
-    Promise.all(
+    // allSettled, not all: one protocol failing a transient fetch (even
+    // after defillama.js's own retry) shouldn't drag every other,
+    // successfully-fetched protocol down into full fallback mode too.
+    Promise.allSettled(
       TRACKED_PROTOCOLS.map(async (protocol) => {
         const { logo, history } = await getProtocolMantleHistory(protocol.slug);
         return { ...protocol, logo: logo ?? protocol.logo, history };
       })
     ),
   ]);
+
+  const protocolHistories = protocolResults
+    .map((result, i) => {
+      if (result.status === "fulfilled") return result.value;
+      const protocol = TRACKED_PROTOCOLS[i];
+      const fallback = FALLBACK_SNAPSHOT.protocols.find((p) => p.slug === protocol.slug);
+      if (!fallback) return null;
+      const now = Math.floor(Date.now() / 1000);
+      return {
+        ...protocol,
+        history: [
+          { date: now - 7 * 86400, tvl: fallback.tvl7dAgo },
+          { date: now, tvl: fallback.tvl },
+        ],
+      };
+    })
+    .filter(Boolean);
 
   const latestChain = chainTvlHistory[chainTvlHistory.length - 1];
   const chain7dAgo = findClosest(chainTvlHistory, daysAgo(7));

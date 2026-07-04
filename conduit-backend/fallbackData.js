@@ -19,6 +19,11 @@ export const FALLBACK_SNAPSHOT = {
     { slug: "init-capital", tvl: 1_908_000, tvl7dAgo: 1_840_000 },
     { slug: "lendle-pooled-markets", tvl: 266_000, tvl7dAgo: 251_000 },
     { slug: "mantle-index-four-fund", tvl: 105_700_000, tvl7dAgo: 104_900_000 },
+    { slug: "fusionx-v3", tvl: 82_700, tvl7dAgo: 79_400 },
+    { slug: "solv-rwa", tvl: 951_000, tvl7dAgo: 968_000 },
+    { slug: "circuit-protocol", tvl: 50_400, tvl7dAgo: 48_900 },
+    { slug: "aurelius", tvl: 23_300, tvl7dAgo: 22_100 },
+    { slug: "puff-penthouse", tvl: 52_400, tvl7dAgo: 51_000 },
   ],
   heartbeat: null,
 };

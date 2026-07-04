@@ -185,7 +185,7 @@ export function buildChatSystemPrompt(context, { searchAllowed = true } = {}) {
 
 The block below is a snapshot of live data as of the start of this conversation; it may be a few minutes stale. You also have tools:
 - get_ecosystem_snapshot: pull the freshest ecosystem numbers if you need them re-confirmed.
-- get_protocol_detail: real live detail for ANY Mantle protocol by DefiLlama slug, not just the 6 below.
+- get_protocol_detail: real live detail for ANY Mantle protocol by DefiLlama slug, not just the 11 below.
 - search_mantle_protocols: real search across every protocol DefiLlama tracks on Mantle, when asked about one not in the list below. Note its TVL may include multichain activity, not Mantle-only, say so if you cite it.
 - get_mantle_chain_status: live RPC heartbeat (block number, gas price) if asked how current the data is.
 ${
@@ -230,7 +230,7 @@ export const CHAT_TOOLS = [
   {
     name: "get_protocol_detail",
     description:
-      "Fetch real live TVL detail for one specific Mantle protocol by its DefiLlama slug, works for any Mantle protocol, not just the 6 curated ones. Returns current/7d-ago/30d-ago TVL and a DefiLlama source URL. Use search_mantle_protocols first if you don't know the exact slug.",
+      "Fetch real live TVL detail for one specific Mantle protocol by its DefiLlama slug, works for any Mantle protocol, not just the 11 curated ones. Returns current/7d-ago/30d-ago TVL and a DefiLlama source URL. Use search_mantle_protocols first if you don't know the exact slug.",
     input_schema: {
       type: "object",
       properties: {
@@ -242,7 +242,7 @@ export const CHAT_TOOLS = [
   {
     name: "search_mantle_protocols",
     description:
-      "Real search across every protocol DefiLlama tracks on Mantle (not just the 6 curated near-native ones). Use when asked about a Mantle protocol not already in your live data. Returns name, slug, category, TVL, and a DefiLlama source URL.",
+      "Real search across every protocol DefiLlama tracks on Mantle (not just the 11 curated near-native ones). Use when asked about a Mantle protocol not already in your live data. Returns name, slug, category, TVL, and a DefiLlama source URL.",
     input_schema: {
       type: "object",
       properties: {
@@ -302,7 +302,7 @@ async function runToolUnsafe(name, input) {
       const results = await searchMantleProtocols(input?.query ?? "");
       return {
         results,
-        note: "TVL for protocols outside Conduit's 6 curated near-native set may include multichain activity, not Mantle-only.",
+        note: "TVL for protocols outside Conduit's 11 curated near-native set may include multichain activity, not Mantle-only.",
       };
     }
     case "get_mantle_chain_status":
