@@ -3,6 +3,14 @@ import { getSnapshot } from "@/conduit-backend/snapshot";
 import { rankSignals, computeComposability, computeNetFlow7d } from "@/conduit-backend/signals";
 import { generateEcosystemBrief, generateSignalBrief, generateAssetBrief, isClaudeConfigured } from "@/conduit-agent/agent";
 import { isDeepSeekConfigured, formatDeepSeekError } from "@/conduit-agent/deepseek";
+import { cached } from "@/conduit-backend/cache";
+
+// Briefs are real LLM calls, not free, so this caps how often any of the
+// three kinds actually hits a provider, regardless of how many visitors load
+// the dashboard in that window. Every request in between gets the same text,
+// streamed to the client exactly like a fresh call (see AgentBrief/TypedText
+// on the frontend, which has no notion of caching either way).
+const BRIEF_TTL_MS = 5 * 60 * 60 * 1000;
 
 export async function POST(request) {
   if (!isDeepSeekConfigured() && !isClaudeConfigured()) {
@@ -32,12 +40,19 @@ export async function POST(request) {
     if (type === "ecosystem") {
       const composability = computeComposability(snapshot.protocols);
       const netFlow = computeNetFlow7d(snapshot.protocols);
-      const text = await generateEcosystemBrief({ ecosystem: snapshot.ecosystem, composability, netFlow, topSignal });
+      const { value: text } = await cached("brief:ecosystem", BRIEF_TTL_MS, () =>
+        generateEcosystemBrief({ ecosystem: snapshot.ecosystem, composability, netFlow, topSignal })
+      );
       return NextResponse.json({ type, text, source: snapshot.source, generatedAt: Date.now() });
     }
 
     if (type === "signal") {
-      const text = await generateSignalBrief({ signal: topSignal });
+      // Keyed by slug, not a flat key, so a cached writeup can never end up
+      // describing a different protocol than the one the dashboard's
+      // (independently, more frequently refreshed) numbers are showing.
+      const { value: text } = await cached(`brief:signal:${topSignal.slug}`, BRIEF_TTL_MS, () =>
+        generateSignalBrief({ signal: topSignal })
+      );
       return NextResponse.json({ type, text, signal: topSignal, source: snapshot.source, generatedAt: Date.now() });
     }
 
@@ -47,7 +62,9 @@ export async function POST(request) {
       if (!protocol || !signal) {
         return NextResponse.json({ error: "not_found", message: `Unknown protocol slug: ${slug}` }, { status: 404 });
       }
-      const sections = await generateAssetBrief({ protocol, signal });
+      const { value: sections } = await cached(`brief:asset:${slug}`, BRIEF_TTL_MS, () =>
+        generateAssetBrief({ protocol, signal })
+      );
       return NextResponse.json({ type, slug, sections, source: snapshot.source, generatedAt: Date.now() });
     }
 
